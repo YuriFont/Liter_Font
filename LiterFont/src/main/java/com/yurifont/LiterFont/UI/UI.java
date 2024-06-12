@@ -11,6 +11,7 @@ import com.yurifont.LiterFont.service.ConvertData;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class UI {
     private final Scanner SC = new Scanner(System.in);
@@ -40,25 +41,35 @@ public class UI {
                 
                 """;
 
-        do {
-            System.out.println(menu);
-            int r = SC.nextInt();
-            SC.nextLine();
+        while (true) {
+            try {
+                System.out.println(menu);
+                int r = SC.nextInt();
+                SC.nextLine();
 
-            switch (r) {
-                case (0):
-                    System.out.println("Leaving...");
-                    return ;
+                switch (r) {
+                    case 0:
+                        System.out.println("Leaving...");
+                        SC.close();
+                        return;
 
-                case (1):
-                    searchBookByName();
-                    break ;
+                    case 1:
+                        searchBookByName();
+                        break;
 
-                default:
-                    System.out.println("Invalid option!!!");
-                    break ;
+                    case 2:
+                        listRegisteredBooks();
+                        break;
+
+                    default:
+                        System.out.println("Invalid option!!!");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid number.");
+                SC.nextLine();
             }
-        } while (true);
+        }
     }
 
     private void searchBookByName() {
@@ -67,7 +78,8 @@ public class UI {
             searchBook = Optional.of(new Book(data));
             repositoryBook.save(searchBook.get());
             System.out.println(data);
-        }
+        } else
+            System.out.println("Book not found!!!");
     }
 
     private BookData getBookData() {
@@ -87,6 +99,19 @@ public class UI {
         }
         String json = CAPI.getData(URL + bookName.replaceAll(" ", "+"));
         LibrarieData librarieData = CD.convertData(json, LibrarieData.class);
+
+        if (librarieData.books().isEmpty())
+            return null;
         return librarieData.books().getFirst();
+    }
+
+    public void listRegisteredBooks() {
+        List<Book> bookList = repositoryBook.findAll();
+
+        if (bookList.isEmpty()) {
+            System.out.println("No books have been registered to date!!!");
+            return ;
+        }
+        bookList.forEach(System.out::println);
     }
 }

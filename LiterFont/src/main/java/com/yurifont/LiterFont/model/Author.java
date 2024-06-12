@@ -21,7 +21,9 @@ public class Author {
     public Author() {}
 
     public  Author(AuthorData a) {
-
+        this.name = a.name();
+        this.birth_year = a.birth_year();
+        this.death_year = a.death_year();
     }
 
     public Long getId() {

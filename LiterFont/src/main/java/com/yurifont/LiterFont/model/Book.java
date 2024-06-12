@@ -14,6 +14,7 @@ public class Book {
     private String title;
     private String language;
     private Integer download_count;
+    private String authorName;
     @ManyToOne
     private Author author;
 
@@ -23,6 +24,10 @@ public class Book {
         this.title = b.title();
         this.language = Arrays.toString(b.languages());
         this.download_count = b.download_count();
+        if (!b.authors().isEmpty())
+            this.authorName = b.authors().get(0).name();
+        else
+            this.authorName = "None";
     }
 
     public Long getId() {
@@ -70,6 +75,7 @@ public class Book {
         return "\n***** BOOK *****\n"
                 + "Title - " + this.title + "\n"
                 + "Language - " + this.language + "\n"
+                + "Author - " + this.authorName + "\n"
                 + "Downloads count - " + this.download_count + "\n";
     }
 }
