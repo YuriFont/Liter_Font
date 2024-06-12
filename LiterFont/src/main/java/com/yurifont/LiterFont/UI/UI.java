@@ -2,6 +2,7 @@ package com.yurifont.LiterFont.UI;
 
 import com.yurifont.LiterFont.model.Book;
 import com.yurifont.LiterFont.model.BookData;
+import com.yurifont.LiterFont.model.LibrarieData;
 import com.yurifont.LiterFont.repository.RepositoryAuthor;
 import com.yurifont.LiterFont.repository.RepositoryBook;
 import com.yurifont.LiterFont.service.ConsumeAPI;
@@ -36,7 +37,7 @@ public class UI {
                 5 - List books in a given language
                 
                 """;
-        Integer r = 42;
+        int r = 42;
 
         do {
             System.out.println(menu);
@@ -61,12 +62,12 @@ public class UI {
 
     private void searchBookByName() {
         BookData data = this.getBookData();
-        System.out.println(data.title());
-        if (data != null) {
+        System.out.println(data);
+        /*if (data != null) {
             searchBook = Optional.of(new Book(data));
             repositoryBook.save(searchBook.get());
             System.out.println(data);
-        }
+        }*/
     }
 
     private BookData getBookData() {
@@ -83,6 +84,9 @@ public class UI {
 //            return null;
 //        }
         String json = CAPI.getData(URL + bookName.replaceAll(" ", "+"));
-        return CD.convertData(json, BookData.class);
+
+        LibrarieData librarieData = CD.convertData(json, LibrarieData.class);
+        System.out.println(librarieData);
+        return null;
     }
 }
