@@ -40,18 +40,19 @@ public class UI {
                 0 - Exit
                 
                 """;
+        int r = 42;
 
-        while (true) {
+        while (r != 0) {
             try {
                 System.out.println(menu);
-                int r = SC.nextInt();
+                r = SC.nextInt();
                 SC.nextLine();
 
                 switch (r) {
                     case 0:
                         System.out.println("Leaving...");
                         SC.close();
-                        return;
+                        System.exit(0);
 
                     case 1:
                         searchBookByName();
