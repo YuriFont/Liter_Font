@@ -36,18 +36,19 @@ public class UI {
                 4 - List living authors in a given year
                 5 - List books in a given language
                 
+                0 - Exit
+                
                 """;
-        int r = 42;
 
         do {
             System.out.println(menu);
-            r = SC.nextInt();
+            int r = SC.nextInt();
             SC.nextLine();
 
             switch (r) {
                 case (0):
                     System.out.println("Leaving...");
-                    break ;
+                    return ;
 
                 case (1):
                     searchBookByName();
@@ -57,36 +58,35 @@ public class UI {
                     System.out.println("Invalid option!!!");
                     break ;
             }
-        } while (r != 0);
+        } while (true);
     }
 
     private void searchBookByName() {
         BookData data = this.getBookData();
-        System.out.println(data);
-        /*if (data != null) {
+        if (data != null) {
             searchBook = Optional.of(new Book(data));
             repositoryBook.save(searchBook.get());
             System.out.println(data);
-        }*/
+        }
     }
 
     private BookData getBookData() {
         System.out.print("Enter the name of book want search: ");
         String bookName = SC.nextLine();
 
-//        List<Book> bookDataList = repositoryBook.findAll();
-//        searchBook = bookDataList.stream()
-//                .filter(b -> b.getTitle().toLowerCase().contains(bookName.toLowerCase()))
-//                .findFirst();
-//
-//        if (searchBook.isPresent()) {
-//            System.out.println("\n" + searchBook.get() + "\n");
-//            return null;
-//        }
-        String json = CAPI.getData(URL + bookName.replaceAll(" ", "+"));
+        List<Book> bookDataList = repositoryBook.findAll();
+        if (!bookDataList.isEmpty()) {
+            searchBook = bookDataList.stream()
+                    .filter(b -> b.getTitle().toLowerCase().contains(bookName.toLowerCase()))
+                    .findFirst();
 
+            if (searchBook.isPresent()) {
+                System.out.println("\n" + searchBook.get() + "\n");
+                return null;
+            }
+        }
+        String json = CAPI.getData(URL + bookName.replaceAll(" ", "+"));
         LibrarieData librarieData = CD.convertData(json, LibrarieData.class);
-        System.out.println(librarieData);
-        return null;
+        return librarieData.books().getFirst();
     }
 }

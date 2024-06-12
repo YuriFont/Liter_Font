@@ -12,6 +12,7 @@ public record BookData(String title, List<AuthorData> authors, String[] language
         return "\n***** BOOK *****\n"
                 + "Title - " + this.title + "\n"
                 + "Language - " + Arrays.toString(this.languages) + "\n"
+                + "Author - " + authors.get(0).name() + "\n"
                 + "Downloads count - " + this.download_count + "\n";
     }
 }
