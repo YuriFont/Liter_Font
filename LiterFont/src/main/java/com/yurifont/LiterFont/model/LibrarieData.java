@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record LibrarieData(@JsonAlias("results") List<BookData> books) {
+public record LibrarieData(@JsonAlias("results") BookData books) {
 }

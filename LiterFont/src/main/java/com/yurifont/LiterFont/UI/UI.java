@@ -1,11 +1,14 @@
 package com.yurifont.LiterFont.UI;
 
-import com.yurifont.LiterFont.model.Author;
+import com.yurifont.LiterFont.model.Book;
 import com.yurifont.LiterFont.model.BookData;
-import com.yurifont.LiterFont.repository.Repository;
+import com.yurifont.LiterFont.repository.RepositoryAuthor;
+import com.yurifont.LiterFont.repository.RepositoryBook;
 import com.yurifont.LiterFont.service.ConsumeAPI;
 import com.yurifont.LiterFont.service.ConvertData;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class UI {
@@ -13,10 +16,13 @@ public class UI {
     private final String URL = "https://gutendex.com/books/?search=";
     private final ConsumeAPI CAPI = new ConsumeAPI();
     private final ConvertData CD = new ConvertData();
-    private Repository repository;
+    private RepositoryAuthor repositoryAuthor;
+    private RepositoryBook repositoryBook;
+    private Optional<Book> searchBook;
 
-    public UI(Repository repository) {
-        this.repository = repository;
+    public UI(RepositoryAuthor repositoryAuthor, RepositoryBook repositoryBook) {
+        this.repositoryAuthor = repositoryAuthor;
+        this.repositoryBook = repositoryBook;
     }
 
     public void showMenu() {
@@ -35,6 +41,7 @@ public class UI {
         do {
             System.out.println(menu);
             r = SC.nextInt();
+            SC.nextLine();
 
             switch (r) {
                 case (0):
@@ -54,7 +61,28 @@ public class UI {
 
     private void searchBookByName() {
         BookData data = this.getBookData();
+        System.out.println(data.title());
+        if (data != null) {
+            searchBook = Optional.of(new Book(data));
+            repositoryBook.save(searchBook.get());
+            System.out.println(data);
+        }
     }
 
-    private
+    private BookData getBookData() {
+        System.out.print("Enter the name of book want search: ");
+        String bookName = SC.nextLine();
+
+//        List<Book> bookDataList = repositoryBook.findAll();
+//        searchBook = bookDataList.stream()
+//                .filter(b -> b.getTitle().toLowerCase().contains(bookName.toLowerCase()))
+//                .findFirst();
+//
+//        if (searchBook.isPresent()) {
+//            System.out.println("\n" + searchBook.get() + "\n");
+//            return null;
+//        }
+        String json = CAPI.getData(URL + bookName.replaceAll(" ", "+"));
+        return CD.convertData(json, BookData.class);
+    }
 }
