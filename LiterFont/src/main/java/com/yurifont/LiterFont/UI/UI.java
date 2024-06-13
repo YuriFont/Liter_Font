@@ -1,5 +1,6 @@
 package com.yurifont.LiterFont.UI;
 
+import com.yurifont.LiterFont.model.Author;
 import com.yurifont.LiterFont.model.Book;
 import com.yurifont.LiterFont.model.BookData;
 import com.yurifont.LiterFont.model.LibrarieData;
@@ -62,6 +63,9 @@ public class UI {
                         listRegisteredBooks();
                         break;
 
+                    case 3:
+
+
                     default:
                         System.out.println("Invalid option!!!");
                         break;
@@ -74,16 +78,19 @@ public class UI {
     }
 
     private void searchBookByName() {
-        BookData data = this.getBookData();
+        LibrarieData data = this.getLibrarieData();
         if (data != null) {
-            searchBook = Optional.of(new Book(data));
-            repositoryBook.save(searchBook.get());
-            System.out.println(data);
+            Book book = new Book(data.books().getFirst());
+            Author author = new Author(data.books().getFirst().authors().getFirst());
+            author.setBooks(book);
+            book.setAuthor(author);
+            repositoryAuthor.save(author);
+            System.out.println(book);
         } else
             System.out.println("Book not found!!!");
     }
 
-    private BookData getBookData() {
+    private LibrarieData getLibrarieData() {
         System.out.print("Enter the name of book want search: ");
         String bookName = SC.nextLine();
 
@@ -103,7 +110,7 @@ public class UI {
 
         if (librarieData.books().isEmpty())
             return null;
-        return librarieData.books().getFirst();
+        return librarieData;
     }
 
     public void listRegisteredBooks() {

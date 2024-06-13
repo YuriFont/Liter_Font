@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "authors")
@@ -22,8 +23,8 @@ public class Author {
 
     public  Author(AuthorData a) {
         this.name = a.name();
-        this.birth_year = a.birth_year();
-        this.death_year = a.death_year();
+        this.birth_year = Optional.ofNullable(a.birth_year()).orElse(0);
+        this.death_year = Optional.ofNullable(a.death_year()).orElse(0);
     }
 
     public Long getId() {
@@ -62,9 +63,8 @@ public class Author {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
-        books.forEach(b -> b.setAuthor(this));
-        this.books = books;
+    public void setBooks(Book book) {
+        this.books.add(book);
     }
 
     @Override
