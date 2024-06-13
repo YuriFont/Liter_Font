@@ -22,6 +22,7 @@ public class UI {
     private RepositoryAuthor repositoryAuthor;
     private RepositoryBook repositoryBook;
     private Optional<Book> searchBook;
+    private Optional<Author> searchAuthor;
 
     public UI(RepositoryAuthor repositoryAuthor, RepositoryBook repositoryBook) {
         this.repositoryAuthor = repositoryAuthor;
@@ -64,7 +65,8 @@ public class UI {
                         break;
 
                     case 3:
-
+                        listRegisteredAuthors();
+                        break;
 
                     default:
                         System.out.println("Invalid option!!!");
@@ -81,10 +83,20 @@ public class UI {
         LibrarieData data = this.getLibrarieData();
         if (data != null) {
             Book book = new Book(data.books().getFirst());
-            Author author = new Author(data.books().getFirst().authors().getFirst());
-            author.setBooks(book);
-            book.setAuthor(author);
-            repositoryAuthor.save(author);
+            Author authorData = new Author(data.books().getFirst().authors().getFirst());
+
+            Optional<Author> optionalAuthor = repositoryAuthor.findByName(authorData.getName());
+
+            if (optionalAuthor.isPresent()) {
+                Author existingAuthor = optionalAuthor.get();
+                existingAuthor.setBooks(book);
+                book.setAuthor(existingAuthor);
+                repositoryAuthor.save(existingAuthor);
+            } else {
+                authorData.setBooks(book);
+                book.setAuthor(authorData);
+                repositoryAuthor.save(authorData);
+            }
             System.out.println(book);
         } else
             System.out.println("Book not found!!!");
@@ -121,5 +133,9 @@ public class UI {
             return ;
         }
         bookList.forEach(System.out::println);
+    }
+
+    public void listRegisteredAuthors() {
+
     }
 }
