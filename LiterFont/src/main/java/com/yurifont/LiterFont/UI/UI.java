@@ -68,6 +68,10 @@ public class UI {
                         listRegisteredAuthors();
                         break;
 
+                    case 4:
+                        listAuthorsLivingGivenYear();
+                        break;
+
                     default:
                         System.out.println("Invalid option!!!");
                         break;
@@ -136,6 +140,16 @@ public class UI {
     }
 
     public void listRegisteredAuthors() {
+        List<Author> authorList = repositoryAuthor.findAll();
 
+        if (authorList.isEmpty()) {
+            System.out.println("No authors have been registered to date!!!");
+            return ;
+        }
+        authorList.forEach(System.out::println);
+    }
+
+    public void listAuthorsLivingGivenYear() {
+        
     }
 }
