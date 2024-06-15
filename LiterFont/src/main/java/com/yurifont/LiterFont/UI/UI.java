@@ -72,6 +72,10 @@ public class UI {
                         listAuthorsLivingGivenYear();
                         break;
 
+                    case 5:
+                        listBooksInAGivenLanguage();
+                        break;
+
                     default:
                         System.out.println("Invalid option!!!");
                         break;
@@ -156,8 +160,26 @@ public class UI {
         List<Author> authorList = repositoryAuthor.searchAuthorsLivingInYear(year);
 
         if (authorList.isEmpty())
-            System.out.println("No author in the database was alive that year");
+            System.out.println("No author in the database was alive that year!!!");
         else
             authorList.forEach(System.out::println);
+    }
+
+    private void listBooksInAGivenLanguage() {
+        System.out.println("""
+                Enter the language to perform the search
+                en - English
+                pt - Portuguese
+                fr - French
+                es - Spanish
+                """);
+        String language = SC.nextLine();
+
+        List<Book> bookList = repositoryBook.searchBooksByLanguage(language);
+
+        if (bookList.isEmpty())
+            System.out.println("No books in the database with this language!!!");
+        else
+            bookList.forEach(System.out::println);
     }
 }
