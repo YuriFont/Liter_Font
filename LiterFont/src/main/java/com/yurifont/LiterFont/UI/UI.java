@@ -150,6 +150,14 @@ public class UI {
     }
 
     public void listAuthorsLivingGivenYear() {
-        
+        System.out.print("Enter the year you want to see which authors were alive: ");
+        Integer year = SC.nextInt();
+
+        List<Author> authorList = repositoryAuthor.searchAuthorsLivingInYear(year);
+
+        if (authorList.isEmpty())
+            System.out.println("No author in the database was alive that year");
+        else
+            authorList.forEach(System.out::println);
     }
 }
